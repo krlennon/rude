@@ -1,0 +1,140 @@
+Filename	gel2_saos_100_1_5Pa
+Instrument name	5333-0052
+Operator	
+rundate	3/8/2022
+Sample name	gel2_saos_100_1_5Pa
+Geometry name	8mm parallel plate, Peltier plate Steel  - 987959
+Procedure name	Frequency sweep
+	Amplitude sweep
+	Amplitude sweep
+	Amplitude sweep
+	Amplitude sweep
+	Amplitude sweep
+	Amplitude sweep
+proceduresegments	Frequency sweep#Amplitude sweep#Amplitude sweep#Amplitude sweep#Amplitude sweep#Amplitude sweep#Amplitude sweep
+[File Parameters]
+Name	gel2_saos_100_1_5Pa
+Instrument type	Discovery HR-3
+Instrument serial number	5333-0052
+Instrument name	5333-0052
+Instrument location	NOT_SET
+Company name	HML
+Trios version	5.2.2.47561
+File name	C:\ProgramData\TA Instruments\TRIOS\Data\User\Data\Kyle\2022-03-08\gel2_saos_100_1_5Pa.tri
+Instrument firmware version	9.52
+Run date	3/8/2022 2:28:41 PM
+[Geometry Parameters]
+Geometry Type	Parallel plate
+Name	8mm parallel plate, Peltier plate Steel  - 987959
+Diameter	8.0 mm
+Gap	200.0 µm
+Loading gap	20000.0 µm
+Trim gap offset	50.0 µm
+Material	Steel
+Material	Stainless steel
+Environmental System	Peltier plate
+Serial number	987959
+Notes	
+[Geometry Extended Parameters]
+Expansion coefficient	0.471146 µm/°C
+Expansion coefficient enabled	yes
+Compliance	1.03 mrad/N.m
+Geometry Inertia	1.65747 µN.m.s²
+Friction	0.264906 µN.m/(rad/s)
+Friction correction enabled	yes
+Stress constant	9947180 Pa/N.m
+Strain constant	20.0 1/rad
+Normal Stress Constant	39788.7 Pa/N
+Fluid Density Constant	2.68083e-14
+[Instrument Options]
+ETC camera available	no
+Friction	0.264906 µN.m/(rad/s)
+Friction calibration date	3/8/2022 2:22:00 PM
+Friction correction enabled	yes
+Rotational mapping date	1/11/2017 12:33:52 PM
+Rotational mapping geometry	8mm parallel plate, Peltier plate Steel  - 987959
+Rotational mapping number of iterations	1
+Rotational mapping type	standard
+Smart swap enabled	no
+[Temperature Options]
+Current temperature system compensation	0.471146 µm/°C
+Current temperature system offset	0.000 °C
+Current temperature system span	1.000
+Gap temperature compensation calibration date	9/28/2021 2:05:43 PM
+Gap temperature compensation enabled	yes
+Purge gas only (no active cooling)	no
+Temperature control enabled	yes
+Temperature system control	Peltier plate
+Upper temperature system fitted	no
+Temperature wait duration	00:00:10 hh:mm:ss
+Temperature wait tolerance	0.200000 °C
+[Inertia Options]
+Instrument inertia	20.5844 µN.m.s²
+Instrument inertia calibration date	3/8/2022 12:42:28 PM
+[Gap Options]
+Axial force for sample compression	1.00000 N
+Closure distance	1000.00 µm
+Closure profile	none
+Closure velocity	500.000 µm/s
+Gap velocity (coarse)	6000.00 µm/s
+Gap velocity (fine)	1000.00 µm/s
+Gap velocity (other)	6000.00 µm/s
+Gap zero mode	standard (DHR) or deceleration (AR)
+Gap handling at start of test	Flag mismatches between geometry and instrument gap
+Gap tolerance	4.00000 µm
+Gap wait duration	00:00:02 hh:mm:ss
+Override wait for gap	no
+[Axial Force Control]
+Axial force action outside range	Return to initial value
+Control axial force active	no
+Control axial force max gap change up	1000.00 µm
+Control axial force min gap change down	1000.00 µm
+Control axial force sensitivity	0.100000 N
+Control axial force set initial value	no
+Control axial force type	Compression
+Controlled axial force	1.00000 N
+[Flow Options]
+Flow collect all points	no
+Flow collect negative shear rate data	yes
+Flow inertia correction	no
+Flow non-steady state minimum velocity	1.00000e-4 rad/s
+Flow torque limit	0.100000 µN.m
+Flow velocity limit	1.00000e-4 rad/s
+Flow velocity tolerance	5.00000 %
+Flow zero strain at start of step	yes
+[Oscillation Options]
+Oscillation displacement limit	1.00000e-5 rad
+Oscillation displacement tolerance	5.00000 %
+Oscillation raw phase limit	170.000 °
+Oscillation torque limit	0.100000 µN.m
+Oscillation torque tolerance	1.00000 %
+Oscillation velocity tolerance	5.00000 %
+[Conditioning Options]
+Zero axial force before run	no
+Zero speed after preshear	Leave as is
+Zero velocity threshold	0.100000 rad/s
+[Experiment all steps options]
+Maximum axial force limit	50.0000 N
+Minimum axial force limit	0.100000 N
+Temperature tolerance (results)	1.00000 °C
+[step]
+Frequency sweep - 1
+Storage modulus	Loss modulus	Tan(delta)	Angular frequency	Oscillation torque	Step time	Temperature	Raw phase	Oscillation displacement	Complex viscosity	Axial force	Oscillation stress	Time	Complex modulus	Frequency	Gap	Oscillation strain	Oscillation strain rate	Phase angle
+Pa	Pa		rad/s	µN.m	s	°C	°	rad	Pa.s	N	Pa	s	Pa	Hz	µm		1/s	°
+28677.2	4622.99	0.161208	100.000	0.501813	6.65504	25.03	179.261	2.43642e-6	290.474	-1.47009e-3	0.404401	6.65504	29047.5	15.9155	700.004	1.39221e-5	1.39221e-3	9.15773
+34505.8	1066.81	0.0309168	63.0957	0.502129	13.2495	25.04	179.489	7.30604e-6	547.141	-1.10531e-3	1.44121	13.2495	34522.3	10.0420	700.011	4.17473e-5	2.63408e-3	1.77084
+37427.2	2798.36	0.0747681	39.8105	0.502278	20.1391	25.04	173.333	3.62788e-5	942.758	-1.64151e-3	7.78021	20.1391	37531.7	6.33604	700.020	2.07297e-4	8.25261e-3	4.27594
+37929.7	3841.95	0.101291	25.1188	0.502327	26.5385	25.03	15.8868	6.23088e-5	1517.74	-1.55616e-3	13.5730	26.5385	38123.7	3.99778	700.035	3.56025e-4	8.94291e-3	5.78384
+37489.7	5444.96	0.145239	15.8490	0.502491	33.3520	25.03	11.0957	3.09188e-5	2390.24	-1.41132e-3	6.69273	33.3520	37883.0	2.52245	700.026	1.76668e-4	2.80002e-3	8.26378
+36407.9	7585.10	0.208337	10.0001	0.502547	39.8115	25.01	13.1227	2.61868e-5	3718.94	-9.75847e-4	5.56473	39.8115	37189.6	1.59156	700.022	1.49631e-4	1.49632e-3	11.7685
+34289.4	10585.6	0.308714	6.30957	0.502579	46.7005	25.00	17.9128	2.54217e-5	5687.58	-1.47581e-3	5.21276	46.7005	35886.2	1.00420	700.028	1.45258e-4	9.16517e-4	17.1562
+30304.2	14290.7	0.471573	3.98105	0.502598	52.1610	25.01	25.7019	2.65535e-5	8416.06	-1.13213e-3	5.08349	52.1610	33504.8	0.633604	700.034	1.51724e-4	6.04023e-4	25.2473
+23243.2	17512.0	0.753425	2.51189	0.502610	57.9467	25.01	37.2861	3.02688e-5	11585.6	-1.95515e-3	5.03324	57.9467	29101.9	0.399780	700.040	1.72952e-4	4.34438e-4	36.9953
+17479.9	17695.1	1.01231	1.58490	0.502619	66.6682	25.00	45.5097	3.52754e-5	15693.7	-2.04980e-3	5.01340	66.6682	24872.9	0.252244	700.038	2.01561e-4	3.19453e-4	45.3505
+10352.3	15846.3	1.53069	1.00000	0.502624	79.9295	25.00	56.9411	4.62790e-5	18928.1	-1.66464e-3	5.00529	79.9295	18928.2	0.159155	700.036	2.64436e-4	2.64436e-4	56.8434
+5317.65	12320.2	2.31685	0.630957	0.502627	100.450	25.00	66.7140	6.52364e-5	21267.4	-2.16913e-3	5.00200	100.450	13418.8	0.100420	700.035	3.72760e-4	2.35196e-4	66.6540
+2436.35	8635.41	3.54440	0.398107	0.502629	132.737	24.99	74.2818	9.75356e-5	22538.0	-1.42705e-3	5.00067	132.737	8972.52	0.0633607	700.017	5.57332e-4	2.21878e-4	74.2444
+1072.55	5768.11	5.37795	0.251189	0.502631	183.688	25.00	79.4897	1.49150e-4	23356.9	-1.76084e-3	5.00014	183.688	5866.98	0.0399779	700.029	8.52252e-4	2.14076e-4	79.4665
+474.726	3736.96	7.87183	0.158490	0.502632	263.697	25.01	82.7747	2.32287e-4	23768.1	-1.48106e-3	4.99994	263.697	3767.00	0.0252244	700.027	1.32730e-3	2.10363e-4	82.7602
+216.928	2402.64	11.0757	0.100000	0.502632	390.078	25.00	84.8500	3.62696e-4	24124.1	9.55820e-4	4.99985	390.078	2412.41	0.0159155	699.999	2.07255e-3	2.07255e-4	84.8409
+
