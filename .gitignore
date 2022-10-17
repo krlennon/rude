@@ -132,3 +132,4 @@ dmypy.json
 /demos/untracked
 
 .DS_Store
+**/.DS_Store
