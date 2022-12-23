@@ -1,4 +1,5 @@
-using DiffEqFlux, Flux, Optim, DifferentialEquations, PyPlot, LinearAlgebra, OrdinaryDiffEq, DelimitedFiles
+using Flux, Optimization, OptimizationOptimisers, SciMLSensitivity, DifferentialEquations
+using Zygote, PyPlot, LinearAlgebra, OrdinaryDiffEq, DelimitedFiles
 using BSON: @save, @load
 
 function dudt_giesekus!(du, u, p, t, gradv)
@@ -130,7 +131,7 @@ function tbnn(σ,γd,model_weights)
 
     # Run the integrity basis through a neural network
     model_inputs = [λ1;λ2;λ3;λ4;λ5;λ6;λ7;λ8;λ9]
-    g1,g2,g3,g4,g5,g6,g7,g8,g9 = model_univ(model_inputs, model_weights)
+    g1,g2,g3,g4,g5,g6,g7,g8,g9 = re(model_weights)(model_inputs)
     
     # Tensor combining layer
     F11 = g1 + g2*σ11 + g3*γd11 + g4*T4_11 + g5*T5_11 + g6*T6_11 + g7*T7_11 + g8*T8_11 + g9*T9_11
@@ -196,7 +197,8 @@ function ensemble_solve(θ,ensemble,protocols,tspans,σ0,trajectories)
 	end
 
 	ensemble_prob = EnsembleProblem(prob, prob_func=prob_func)
-	sim = solve(ensemble_prob, Tsit5(), ensemble, trajectories=trajectories, saveat=0.2)
+	sim = solve(ensemble_prob, Tsit5(), ensemble, trajectories=trajectories, 
+		    sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP(true)), saveat=0.2)
 end
 
 function loss_univ(θ,protocols,tspans,σ0,σ12_all,trajectories)
@@ -265,9 +267,10 @@ for k = range(1,length(protocols),step=1)
 end
 
 # NN model for the nonlinear function F(σ,γ̇)
-model_univ = FastChain(FastDense(9, 32, tanh),
-                       FastDense(32, 32, tanh),
-                       FastDense(32, 9))
+model_univ = Flux.Chain(Flux.Dense(9, 32, tanh),
+                       Flux.Dense(32, 32, tanh),
+                       Flux.Dense(32, 9))
+p_model, re = Flux.destructure(model_univ)
 
 # The protocol at which we'll start continuation training
 # (choose start_at > length(protocols) to skip training)
@@ -280,7 +283,6 @@ if start_at > 1
 	n_weights = length(θi)
 else
 	# The model weights are destructured into a vector of parameters
-	p_model = initial_params(model_univ)
 	n_weights = length(p_model)
 	p_model = zeros(n_weights)
 end
@@ -302,15 +304,14 @@ callback = function (θ, l, protocols, tspans, σ0, σ12_all, trajectories)
 end
 
 # Continutation training loop
+adtype = Optimization.AutoZygote()
 for k = range(start_at,length(protocols),step=1)
 	loss_fn(θ) = loss_univ([θ; p_system], protocols[1:k], tspans[1:k], σ0, σ12_all, k)
 	cb_fun(θ, l) = callback(θ, l, protocols[1:k], tspans[1:k], σ0, σ12_all, k)
-	result_univ = DiffEqFlux.sciml_train(loss_fn, θi,
-					     AMSGrad(),
-					     cb = cb_fun,
-					     allow_f_increases = false,
-					     maxiters = 200)
-	global θi = result_univ.minimizer
+	optf = Optimization.OptimizationFunction((x,p) -> loss_fn(x), adtype)
+	optprob = Optimization.OptimizationProblem(optf, θi)
+	result_univ = Optimization.solve(optprob, Optimisers.AMSGrad(), callback = cb_fun, maxiters = 200)
+	global θi = result_univ.u
 	@save "tbnn.bson" θi
 end
 

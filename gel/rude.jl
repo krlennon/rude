@@ -1,4 +1,5 @@
-using DiffEqFlux, Flux, Optim, DifferentialEquations, PyPlot, LinearAlgebra, OrdinaryDiffEq, DelimitedFiles
+using Flux, Optimization, OptimizationOptimisers, SciMLSensitivity, DifferentialEquations
+using Zygote, PyPlot, LinearAlgebra, OrdinaryDiffEq, DelimitedFiles
 using DataInterpolations
 using BSON: @save, @load
 using FFTW
@@ -89,8 +90,8 @@ function tbnn(σ,γd,model_weights_1,model_weights_2)
 
     # Run the integrity basis through a neural network
     model_inputs = [λ1;λ2;λ3;λ4;λ5;λ6;λ7;λ8;λ9]
-    g1,g2,g3 = model_univ_1(model_inputs, model_weights_1)
-    g4,g5,g6,g7,g8,g9 = model_univ_2(model_inputs, model_weights_2)
+    g1,g2,g3 = re_1(model_weights_1)(model_inputs)
+    g4,g5,g6,g7,g8,g9 = re_2(model_weights_2)(model_inputs)
     
     # Tensor combining layer
     F11 = g1 + g2*σ11 + g3*γd11 + g4*T4_11 + g5*T5_11 + g6*T6_11 + g7*T7_11 + g8*T8_11 + g9*T9_11
@@ -161,7 +162,8 @@ function ensemble_solve(θ,η0s,τs,ensemble,protocols,tspans,σ0,saveat)
 	end
 
 	ensemble_prob = EnsembleProblem(prob, prob_func=prob_func)
-	sim = solve(ensemble_prob, Tsit5(), ensemble, trajectories=n_protocols*n_modes, saveat=saveat, dtmin=1E-4)
+	sim = solve(ensemble_prob, Tsit5(), ensemble, trajectories=n_protocols*n_modes, 
+		    sensealg = InterpolatingAdjoint(autojacvec=ReverseDiffVJP(true)), saveat=saveat, dtmin=1E-4)
 end
 
 function loss_univ(θ,p_system,n_modes,protocols,tspans,σ0,σ12_all,saveat)
@@ -265,30 +267,30 @@ saveat = t_all[end][end]/length(t_all[end])
 tspans = [tspan, tspan, tspan, tspan, tspan, tspan, tspan, tspan, tspan, tspan, tspan]
 
 # NN model for the nonlinear function F(σ,γ̇)
-model_univ_1 = FastChain(FastDense(9, 32, tanh, bias=false),
-                       FastDense(32, 32, tanh, bias=false),
-                       FastDense(32, 3, bias=false))
-model_univ_2 = FastChain(FastDense(9, 32, tanh),
-                       FastDense(32, 32, tanh),
-                       FastDense(32, 6))
+model_univ_1 = Flux.Chain(Flux.Dense(9, 32, tanh, bias=false),
+                       Flux.Dense(32, 32, tanh, bias=false),
+                       Flux.Dense(32, 3, bias=false))
+model_univ_2 = Flux.Chain(Flux.Dense(9, 32, tanh),
+                       Flux.Dense(32, 32, tanh),
+                       Flux.Dense(32, 6))
+p_model_1, re_1 = Flux.destructure(model_univ_1)
+p_model_2, re_2 = Flux.destructure(model_univ_2)
 
 # The protocol at which we'll start continuation training
 # (choose start_at > length(protocols) to skip training)
-start_at = 5
+start_at = 1
 
 if start_at > 1
 	# Load the partially-trained model (if not starting from scratch)
 	@load "weights_603.bson" θ
 	p_model = θ
-	n_weights_1 = length(initial_params(model_univ_1))
-	n_weights_2 = length(initial_params(model_univ_2))
-else
-	# The model weights are destructured into a vector of parameters
-	p_model_1 = initial_params(model_univ_1)
-	p_model_2 = initial_params(model_univ_2)
 	n_weights_1 = length(p_model_1)
 	n_weights_2 = length(p_model_2)
-	p_model = zeros(n_weights_1 + n_weights_2)
+else
+	# The model weights are destructured into a vector of parameters
+	n_weights_1 = length(p_model_1)
+	n_weights_2 = length(p_model_2)
+	p_model = zeros(Float32, n_weights_1 + n_weights_2)
 end
 
 # Parameters of the linear response (η0,τ)
@@ -297,7 +299,7 @@ end
 n_modes = length(η0)
 p_system = Float32[η0; τ]
 
-θ0 = zeros(length(p_model))
+θ0 = zeros(Float32, size(p_model))
 θi = p_model
 
 iter = 0
@@ -317,16 +319,15 @@ callback = function (θ, l, protocols, tspans, σ0, σ12_all)
 end
 
 # Continuation training loop
+adtype = Optimization.AutoZygote()
 for k = range(start_at,length(protocols),step=1)
 	loss_fn(θ) = loss_univ(θ, p_system, n_modes, protocols[1:k], tspans[1:k], σ0, σ12_all, saveat)
 	cb_fun(θ, l) = callback(θ, l, protocols[1:k], tspans[1:k], σ0, σ12_all)
-	@time result_univ = DiffEqFlux.sciml_train(loss_fn, θi,
-					     AMSGrad(),
-					     cb = cb_fun,
-					     allow_f_increases = false,
-					     maxiters = 200)
+	optf = Optimization.OptimizationFunction((x,p) -> loss_fn(x), adtype)
+	optprob = Optimization.OptimizationProblem(optf, θi)
+	@time result_univ = Optimization.solve(optprob, Optimisers.AMSGrad(), callback = cb_fun, maxiters = 200)
 
-	global θi = result_univ.minimizer
+	global θi = result_univ.u
 	
 	# Save the weights
 	@save "tbnn.bson" θi	

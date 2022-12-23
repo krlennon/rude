@@ -4,7 +4,7 @@ This repository contains the code used to produce all results in the preprint: [
 
 ## Compatibility
 
-The scripts used to train and test RUDEs on shear rheometric data were developed using [Julia](https://julialang.org/downloads/) v1.6.3, with the following packages: DiffEqFlux v1.43.0, Flux v0.12.7, Optim v1.4.1, DifferentialEquations v6.19.0, PyPlot v2.10.0, OrdinaryDiffEq v5.64.0, DataInterpolations v3.6.1, BSON v0.3.5, and FFTW v1.4.5.
+The scripts used to train and test RUDEs on shear rheometric data were developed using [Julia](https://julialang.org/downloads/) v1.8.3, with the following packages: Flux v0.13.9, Optimization v3.10.0, Optimisers v0.2.14, OptimizationOptimisers v0.1.1, SciMLSensitivity v7.11.1, DifferentialEquations v7.6.0, Zygote v0.6.51, Enzyme v0.10.12, PyPlot v2.11.0, OrdinaryDiffEq v6.35.1, DataInterpolations v3.10.1, BSON v0.3.6, and FFTW v1.5.0.
 
 Computational fluid dynamics simulations were performed using [OpenFOAM](https://openfoam.org/download/archive/) v9, with the [rheoTool](https://github.com/fppimenta/rheoTool) v5.0 toolbox.
 
